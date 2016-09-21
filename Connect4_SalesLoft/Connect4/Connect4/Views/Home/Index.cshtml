@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Connect4";
+}
+@section featured {
+    <section class="featured" style="background-color:blue !important">
+        <div class="content-wrapper" style="background-image: none !important; background-color:blue !important">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1><br/>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+                <a href="Rules.cshtml">Click here for the rules of the game</a>
+
+            </p>
+        </div>
+</section>
+}
+<h3>Game Board</h3>
+<div id="GameBoard" style="background-color: white; display: block; width: 80%; height: 80%; margin-left: auto; margin-right: auto; ">
+    
+</div>
+
+<script type="text/javascript">
+    var board = $("#GameBoard");
+    
+    function Board_Setup(board) {
+        
+        Board_AddTable(board);
+    }
+    function Board_AddTable(board) {
+        var rows = 6;//found on hasbro website
+        var cols = 7;
+       // board.append($('<table style=width:80%'));
+
+        for (var y = 0; y < rows; y++) {  //for each row
+            
+            board.append($('<tr>'));
+           
+            for (var x = 0; x < cols; x++) {  //for each col
+                board.append($('<td >')
+                    .append($('<img>')
+                        .attr('src', '/Images/RedPiece.png')
+                        .attr('width', '50px')
+                        .attr('style', 'visibility:hidden')
+                        ))
+                        .append($('</td>'));
+            }
+            board.append($('/<tr>'));
+        }
+      //  board.append($('</table>'));
+
+    }
+
+    Board_Setup(board);
+</script>
