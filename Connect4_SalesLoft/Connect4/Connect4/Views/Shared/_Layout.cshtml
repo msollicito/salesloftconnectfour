@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%; background-color: lightgray">
     <head>
         <meta charset="utf-8" />
         <title>@ViewBag.Title - My ASP.NET MVC Application</title>
@@ -8,6 +8,17 @@
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
         @Scripts.Render("~/bundles/jquery")
+        <style>
+            html {
+              height: 100%;
+              box-sizing: border-box;
+            }
+            *,
+            *:before,
+            *:after {
+              box-sizing: inherit;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -30,19 +41,19 @@
                 </div>
             </div>
         </header>
-        <div id="body">
+        <div id="body" style="position: relative;margin: 0;padding-bottom: 6rem;min-height: 100%;background-color:lightgray">
             @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
+            <section class="content-wrapper main-content clear-fix" style=" margin: 0 auto;padding-top: 64px;max-width: 640px;width: 94%;">
                 @RenderBody()
             </section>
         </div>
-        <footer>
+        @*<footer style="position: absolute; right: 0; bottom: 0; left: 0; margin-bottom: 0; padding: 1rem; background-color: #efefef; text-align: center;">
             <div class="content-wrapper">
                 <div class="float-left">
                     <p>&copy; @DateTime.Now.Year - SalesLoft Application</p>
                 </div>
             </div>
-        </footer>
+        </footer>*@
 
         @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)

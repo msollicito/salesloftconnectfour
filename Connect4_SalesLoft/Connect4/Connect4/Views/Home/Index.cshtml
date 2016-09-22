@@ -3,53 +3,318 @@
 }
 @section featured {
     <section class="featured" style="background-color:blue !important">
-        <div class="content-wrapper" style="background-image: none !important; background-color:blue !important">
+        <div class="content-wrapper" style="background-image: none !important; background-color: blue !important">
             <hgroup class="title">
                 <h1>@ViewBag.Title.</h1><br/>
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <a href="Rules.cshtml">Click here for the rules of the game</a>
+                <a href="Rules.cshtml"><font color="white">Click here for the rules of the game</font></a>
 
             </p>
+            <h3 style="color: white">Game Board</h3>
+            <div style="margin-right: 0px; color: white">Click on a white piece to turn it to your color.</div>
+
+            <div id="GameBoard" style="display: block; position: absolute; left: 650px; top: 200px; margin: 0 auto; padding-top: 64px; max-width: 640px; width: 94%;">
+
+
+
+            </div>
+            <div id="currentColor" style="width: 200px; position: absolute; left: 150px; border-radius: 10px; top: 300px; height: 50px; display: block; background-color: blue; text-align: center;">
+                <p id="turn" style="top: 50%; left: 50%; color: white">Blue's turn</p>
+                <p id="alert" style="top: 50%; left: 50%; color: white">Click on a white piece now!</p>
+            </div>
         </div>
+           
 </section>
 }
-<h3>Game Board</h3>
-<div id="GameBoard" style="background-color: white; display: block; width: 80%; height: 80%; margin-left: auto; margin-right: auto; ">
-    
-</div>
+
+
 
 <script type="text/javascript">
     var board = $("#GameBoard");
-    
-    function Board_Setup(board) {
-        
-        Board_AddTable(board);
-    }
-    function Board_AddTable(board) {
-        var rows = 6;//found on hasbro website
-        var cols = 7;
-       // board.append($('<table style=width:80%'));
+    var boardattribs = { left: 650, top: 200 };
+    var colors = {
+        white: '/Images/WhitePiece.png',
+        red: '/Images/RedPiece.png',
+        blue: '/Images/BluePiece.png'
+    };
+    var rows = 6;//found on hasbro website
+    var cols = 7;
+    //start with blue player
+    var currentColor = colors.blue;
 
-        for (var y = 0; y < rows; y++) {  //for each row
+    //Piece class for storing attribs of each piece object
+    var Piece = function (y, x, img) {
+        
+        this.x = x;
+        this.y = y;
+        
+        if (img + "" == "") {
             
-            board.append($('<tr>'));
-           
-            for (var x = 0; x < cols; x++) {  //for each col
-                board.append($('<td >')
+            img = colors.white;
+        }
+        this.img = img;
+        
+    };
+    
+    //array of pieces 2 dims - one for cols and one for rows
+    var pieces = new Array();
+    
+   
+
+ 
+  
+    function Board_Setup(board,init) {
+        
+        Board_AddTable(board,init);
+    }
+   
+    function Board_AddTable(board,init) {
+        
+       
+        //for each row
+        for (var y = 0; y < rows; y++) {  
+            
+            board.append($('<tr style=background-color:white; border:0; margin:0; padding:0>'));
+
+            pieces[y] = new Array();
+
+            //for each col
+            for (var x = 0; x < cols; x++) {  
+
+                //white piece is empty space
+                var pieceColor = colors.white;
+
+                ////set up the piece object
+                pieces[y][x] = new Piece( y,  x, pieceColor);
+                
+                board.append($('<td id=' + y + '' + x + ' style=background-color:white; border:0; margin:0; padding:0; cell-padding:0>')
                     .append($('<img>')
-                        .attr('src', '/Images/RedPiece.png')
+                        .attr('src', pieceColor)
                         .attr('width', '50px')
-                        .attr('style', 'visibility:hidden')
+                        
                         ))
                         .append($('</td>'));
             }
             board.append($('/<tr>'));
         }
-      //  board.append($('</table>'));
 
+        board.append($('<tr><td colspan=7><br><div id="footer" style="background-color:lightgray">A SalesLoft production</div></td></tr>'));
+       
+    }
+    
+    Board_Setup(board, true);
+
+    function IsValidMove(y, x) {
+        debugger;
+        x = parseInt(x);
+        y = parseInt(y);
+        
+        //if someone already has that spot
+        if (pieces[y][x].img != colors.white) {
+            $("#alert").text('You cannot move there sorry - try again');
+            return false;
+        }
+        else {
+                //if we are on the bottom row
+                if (y >= 5) {
+                    $("#alert").text('valid move');
+                    return true;
+                }
+                else {
+                    
+                    //if position above is NOT taken by a piece already, you cannot move there
+                    try {
+                        
+                        var ypos = parseInt(y);
+                        var xpos = parseInt(x);
+                        var strcolor = pieces[ypos + 1][xpos].img + "";
+                        var white = colors.white;
+
+                        if (strcolor == white + "") {
+                            $("#alert")
+                                .text('You cannot move there sorry - try again:' + ypos + ' ' + x );
+                        } else {
+                            $("#alert").text('valid move');
+                            return true;
+                        }
+                    }
+                    catch(Exception )
+                    {
+                        //alert(pieces.length + ' is length of pieces');
+                        //alert('tried to get to ' + y + 1 + ' and x: ' + x);
+                        
+                    }
+
+               }
+
+        }
+    }
+    function checkWin(y, x) {
+        
+        var color = pieces[y][x].img;
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+       
+        for (var y2 = 0; y2 < rows; y2++) {
+            redRow = 0;
+            
+            blueRow = 0;
+            
+            //for each col
+            for (var x2 = 0; x2 < cols; x2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.red) {
+
+                        redRow++;
+
+                        // $("#alert").text('redRow:' + redRow );
+                        if (redRow >= 3) {
+
+                            return true;
+                        }
+
+                    } else {
+                        redRow = 0;
+
+                    }
+                } catch (Exception) {
+                    
+                }
+            }
+      }
+        for (var y2 = 0; y2 < rows; y2++) {
+            blueRow = 0;
+            
+                
+            
+            //for each col
+            for (var x2 = 0; x2 < cols; x2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.blue) {
+
+                        blueRow++;
+
+                        // $("#alert").text('redRow:' + redRow );
+                        if (blueRow >= 3) {
+
+                            return true;
+                        }
+
+                    } else {
+                        blueRow = 0;
+
+                    }
+                } catch (Exception) {
+                    
+                }
+            }    
+            
+        }
+        for (var x2 = 0; x2 < cols; x2++) {
+            blueCol = 0;
+            
+                
+            
+            //for each row
+            for (var y2 = 0; y2 < cols; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.blue) {
+
+                        blueCol++;
+
+                        // $("#alert").text('redRow:' + redRow );
+                        if (blueCol >= 3) {
+
+                            return true;
+                        }
+
+                    } else {
+                        blueCol = 0;
+
+                    }
+                } catch (Exception) {
+                    
+                }
+            }    
+        }
+        for (var x2 = 0; x2 < cols; x2++) {
+            redCol = 0;
+            
+                
+            
+            //for each row
+            for (var y2 = 0; y2 < cols; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.red) {
+
+                        redCol++;
+
+                        // $("#alert").text('redRow:' + redRow );
+                        if (redCol >= 3) {
+
+                            return true;
+                        }
+
+                    } else {
+                        redCol = 0;
+
+                    }
+                } catch (Exception) {
+                    
+                }
+            }    
+        }
+            
+        return false;
     }
 
-    Board_Setup(board);
+    $("td").click(function () {
+        debugger;
+        var id = this.id;
+        var y = id.substr(0, 1);
+        var x = id.substr(1, 1);
+       // alert('you clicked on y:' + y + ' and x:' + x);
+        if (IsValidMove(y,x)) {
+    
+            if (pieces[y][x].img == colors.white) {
+            
+                //it was white before so change color
+                pieces[y][x].img = currentColor;
+                alert('y:' + y + 'x:' + x + ' color:' + currentColor);
+            
+                $(this).children('img').attr('src', currentColor);//change color of first child (image)
+            
+                if (currentColor + "" == colors.blue + "") {
+                    currentColor = colors.red;
+                
+                    $("#currentColor").css("background-color", "red");
+                    $("#turn").text("Red's turn");
+
+                } else {
+                    currentColor = colors.blue;
+                
+                    $("#currentColor").css("background-color", "blue");
+                    $("#turn").text("Blue's turn");
+                }
+            
+            }
+            //$("#alert").text('Checking to see if you won..');
+            if (checkWin(y, x) == true) {
+                $("#alert").text('Congratulations!  You won!!');
+                Board_Setup(board, true);
+            } else {
+                //$("#alert").text('No one has won yet!')
+            }
+            //if (checkWin(x, y) == true) {
+            //    //$("#alert").text('Congratulations!  You won!!');
+            //    Board_Setup(board, true);
+            //}
+        }
+    });
+
 </script>
