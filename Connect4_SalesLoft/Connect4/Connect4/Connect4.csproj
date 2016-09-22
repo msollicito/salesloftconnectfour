@@ -248,7 +248,12 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Images\bluepiece.PNG" />
+    <Content Include="Images\greenpiece.PNG" />
+    <Content Include="Images\redpiece.png" />
     <Content Include="Images\SalesLoft.png" />
+    <Content Include="Images\whitepiece.PNG" />
+    <Content Include="Images\yellowpiece.PNG" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
