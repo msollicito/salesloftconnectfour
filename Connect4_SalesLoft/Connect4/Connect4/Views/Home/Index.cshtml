@@ -107,7 +107,7 @@
     Board_Setup(board, true);
 
     function IsValidMove(y, x) {
-        debugger;
+        
         x = parseInt(x);
         y = parseInt(y);
         
@@ -134,7 +134,7 @@
 
                         if (strcolor != white + "") {
                             
-                            $("#alert").text('valid move');
+                            //$("#alert").text('valid move');
                             return true;
                         }
                     }
@@ -151,20 +151,47 @@
         return false;
     }
     function checkWin(y, x) {
-       
-        var color = pieces[y][x].img +'';
+        debugger;
+        if (rowFound(y,x)==true) {
+            return true;
+        }
+        //detect diagonal wins
+        //do we have a bluediag or a reddiag?
+        if (colFoundBlue(y,x)==true) {
+            return true;
+        }
+        if (colFoundRed(y,x)==true) {
+           return true   
+        }  
+
+        if (diagFoundBlue(y, x) == true) {
+            return true;
+        }
+        if (diagFoundBlueNeg(y,x)==true) {
+            return true;
+        }
+        if (diagFoundBluePos(y, x) == true) {
+            return true;
+        }
+        //if (diagFoundNeg(y,x)==true) {
+        //    return true;
+        //}
+        return false;
+    }
+    function rowFound(y,x) {
+        var color = pieces[y][x].img + '';
         var redRow = 0;
         var redCol = 0;
         var blueRow = 0;
         var blueCol = 0;
-        
+
         //do we have a redrow or a bluerow?
         for (var y2 = 0; y2 < rows; y2++) {
 
             redRow = 0;
-            
+
             blueRow = 0;
-            
+
             //for each col
             for (var x2 = 0; x2 < cols; x2++) {
                 try {
@@ -185,7 +212,7 @@
 
                             blueRow++;
 
-                            // $("#alert").text('redRow:' + redRow );
+
                             if (blueRow >= 4) {
 
                                 return true;
@@ -197,17 +224,24 @@
                         }
                     }
                 } catch (Exception) {
-                    
+
                 }
             }
         }
-       
+        return false;
+    }
+    function colFoundBlue(y,x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
         //do we have a bluecol or a redcol?
         for (var x2 = 0; x2 < cols; x2++) {
             blueCol = 0;
             redCol = 0;
-                
-            
+
+
             //for each row
             for (var y2 = 0; y2 < cols; y2++) {
                 try {
@@ -216,7 +250,7 @@
                         blueCol++;
                         redCol = 0;
                         // $("#alert").text('redRow:' + redRow );
-                        if (blueCol >=4) {
+                        if (blueCol >= 4) {
 
                             return true;
                         }
@@ -233,6 +267,7 @@
                                 return true;
                             }
 
+
                         } else {
                             redCol = 0;
 
@@ -240,18 +275,331 @@
 
                     }
                 } catch (Exception) {
-                    
-                }
-            }    
-        }
-        
-        //still need some code in here to detect diagonal wins
 
+                }
+            }
+        }
         return false;
     }
 
+    function diagFoundBlue(y,x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+        for (var x2 = 0; x2 < cols; x2++) {
+            var blueDiag = 0;
+            var redDiag = 0;
+
+
+            //for each row
+            for (var y2 = 0; y2 < cols; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.blue) {
+                        redDiag = 0;
+                        blueDiag = 0;
+                        var newx = x2;
+                        for (var y3 = y2; y3 >= 0 ; y3--) {
+                            
+                            if (newx > cols) {
+                                break;
+                            }
+                            $("#alert").text("checking " + y3 + " " + newx);
+                            if (pieces[y3][newx].img == colors.blue) {
+
+                                blueDiag++;
+                                //$("#alert").text("blueDiag" + blueDiag);
+
+                                if (blueDiag >= 4) {
+
+                                    return true;
+                                }
+                            } else {
+                                blueDiag = 0;
+                                break;
+                            }
+                            newx++;
+                        }
+
+                    }
+
+                } catch (Exception) {
+                    
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    function diagFoundBluePos(y, x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+        for (var x2 = 0; x2 < cols; x2++) {
+            var blueDiag = 0;
+            var redDiag = 0;
+
+
+            //for each row
+            for (var y2 = 0; y2 < cols; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.blue) {
+                        redDiag = 0;
+                        blueDiag = 0;
+                        var newx = x2;
+                        for (var y3 = y2; y3 <rows ; y3++) {
+
+                            if (newx >cols) {
+                                break;
+                            }
+                            $("#alert").text("checking " + y3 + " " + newx);
+                            if (pieces[y3][newx].img == colors.blue) {
+
+                                blueDiag++;
+                                //$("#alert").text("blueDiag" + blueDiag);
+
+                                if (blueDiag >= 4) {
+
+                                    return true;
+                                }
+                            } else {
+                                blueDiag = 0;
+                                break;
+                            }
+                            newx++;
+                        }
+
+                    }
+
+                } catch (Exception) {
+
+                }
+            }
+        }
+
+        return false;
+
+    }
+    function diagFoundRedPos(y, x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+        for (var x2 = 0; x2 < cols; x2++) {
+            var blueDiag = 0;
+            var redDiag = 0;
+
+
+            //for each row
+            for (var y2 = 0; y2 < cols; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.red) {
+                        redDiag = 0;
+                        blueDiag = 0;
+                        var newx = x2;
+                        for (var y3 = y2; y3 < rows ; y3++) {
+
+                            if (newx < 0) {
+                                break;
+                            }
+                            $("#alert").text("checking " + y3 + " " + newx);
+                            if (pieces[y3][newx].img == colors.red) {
+
+                                redDiag++;
+                                //$("#alert").text("blueDiag" + blueDiag);
+
+                                if (redDiag >= 4) {
+
+                                    return true;
+                                }
+                            } else {
+                                redDiag = 0;
+                                break;
+                            }
+                            newx--;
+                        }
+
+                    }
+
+                } catch (Exception) {
+
+                }
+            }
+        }
+
+        return false;
+
+    }
+    function colFoundRed(y,x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+            for (var x2 = 0; x2 < cols; x2++) {
+                var blueDiag = 0;
+                var redDiag = 0;
+
+                for (var y2 = 0; y2 < cols; y2++) {
+                    try {
+
+                        if (pieces[y2][x2].img == colors.red) {
+                            var newx = x2;
+                            redDiag = 0;
+                            blueDiag = 0;
+
+                            for (var y3 = y2; y3 >= 0 ; y3--) {
+
+                                if (newx > cols) {
+                                    break;
+                                }
+                                $("#alert").text("checking " + y3 + " " + newx);
+
+                                if (pieces[y3][newx].img == colors.red) {
+
+                                    redDiag++;
+                                    $("#alert").text("redDiag" + redDiag);
+                                    if (redDiag >= 4) {
+
+                                        return true;
+                                    }
+                                } else {
+                                    redDiag = 0;
+                                    break;
+                                }
+                                newx++;
+                            }
+                        }
+
+
+                    } catch (Exception) {
+
+                    }
+                }
+            }
+            return false;
+   }
+        
+
+    function diagFoundBlueNeg(y,x) {
+
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+        //detect diagonal wins
+        
+        for (var x2 = cols; x2 >= 0; x2--) {
+            var blueDiag = 0;
+            var redDiag = 0;
+
+
+            ////for each row
+            for (var y2 = cols; y2 >= 0; y2--) {
+                try {
+                    if (pieces[y2][x2].img == colors.blue) {
+                        redDiag = 0;
+                        blueDiag = 0;
+                        var newx = x2;
+                        for (var y3 = y2; y3 < rows ; y3++) {
+
+                            if (newx < cols) {
+                                break;
+                            }
+                            $("#alert").text("checking " + y3 + " " + newx);
+                            if (pieces[y3][newx].img == colors.blue) {
+
+                                blueDiag++;
+                                //$("#alert").text("blueDiag" + blueDiag);
+
+                                if (blueDiag >= 4) {
+
+                                    return true;
+                                }
+                                else {
+                                    blueDiag = 0;
+                                    break;
+                                }
+
+                                newx--;
+                            }
+                        }
+
+                    }
+
+                } catch (Exception) {
+                }
+
+            }
+        }
+        return false;
+    }
+    function diagFoundNeg(y,x) {
+        var color = pieces[y][x].img + '';
+        var redRow = 0;
+        var redCol = 0;
+        var blueRow = 0;
+        var blueCol = 0;
+
+        //red diag
+        for (var x2 = cols; x2 >= 0; x2--) {
+            var blueDiag = 0;
+            var redDiag = 0;
+
+        ////for each row
+            for (var y2 = cols; y2 >= 0; y2++) {
+                try {
+                    if (pieces[y2][x2].img == colors.red) {
+                        redDiag = 0;
+                        blueDiag = 0;
+                        var newx = x2;
+                        for (var y3 = y2; y3 < rows ; y3++) {
+
+                            if (newx < cols) {
+                                break;
+                            }
+                            $("#alert").text("checking " + y3 + " " + newx);
+                            if (pieces[y3][newx].img == colors.red) {
+
+                                redDiag++;
+                                //$("#alert").text("blueDiag" + blueDiag);
+
+                                if (redDiag >= 4) {
+
+                                    return true;
+                                }
+                             else {
+                                redDiag = 0;
+                                break;
+                            }
+                                newx--;
+                           }
+                        }
+
+                    }
+
+                } catch (Exception) {
+
+                }
+            }
+        }
+        return false;
+    }
+      
     $("td").click(function () {
-        debugger;
+        
         var id = this.id;
         var y = id.substr(0, 1);
         var x = id.substr(1, 1);
