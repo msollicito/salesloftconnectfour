@@ -132,10 +132,8 @@
                         var strcolor = pieces[ypos + 1][xpos].img + "";
                         var white = colors.white;
 
-                        if (strcolor == white + "") {
-                            $("#alert")
-                                .text('You cannot move there sorry - try again:' + ypos + ' ' + x );
-                        } else {
+                        if (strcolor != white + "") {
+                            
                             $("#alert").text('valid move');
                             return true;
                         }
@@ -150,17 +148,18 @@
                }
 
         }
+        return false;
     }
     function checkWin(y, x) {
-        
-        var color = pieces[y][x].img;
+       
+        var color = pieces[y][x].img +'';
         var redRow = 0;
         var redCol = 0;
         var blueRow = 0;
         var blueCol = 0;
-
-       
+        
         for (var y2 = 0; y2 < rows; y2++) {
+
             redRow = 0;
             
             blueRow = 0;
@@ -173,7 +172,7 @@
                         redRow++;
 
                         // $("#alert").text('redRow:' + redRow );
-                        if (redRow >= 3) {
+                        if (redRow >= 4) {
 
                             return true;
                         }
@@ -200,7 +199,7 @@
                         blueRow++;
 
                         // $("#alert").text('redRow:' + redRow );
-                        if (blueRow >= 3) {
+                        if (blueRow >= 4) {
 
                             return true;
                         }
@@ -228,7 +227,7 @@
                         blueCol++;
 
                         // $("#alert").text('redRow:' + redRow );
-                        if (blueCol >= 3) {
+                        if (blueCol >=4) {
 
                             return true;
                         }
@@ -255,7 +254,7 @@
                         redCol++;
 
                         // $("#alert").text('redRow:' + redRow );
-                        if (redCol >= 3) {
+                        if (redCol >= 4) {
 
                             return true;
                         }
@@ -269,7 +268,8 @@
                 }
             }    
         }
-            
+        //still need some code in here to detect diagonal wins
+
         return false;
     }
 
@@ -285,8 +285,7 @@
             
                 //it was white before so change color
                 pieces[y][x].img = currentColor;
-                alert('y:' + y + 'x:' + x + ' color:' + currentColor);
-            
+                
                 $(this).children('img').attr('src', currentColor);//change color of first child (image)
             
                 if (currentColor + "" == colors.blue + "") {
@@ -305,15 +304,18 @@
             }
             //$("#alert").text('Checking to see if you won..');
             if (checkWin(y, x) == true) {
-                $("#alert").text('Congratulations!  You won!!');
-                Board_Setup(board, true);
+                //its already changed so it will be the opposite of the winner's color!!!!
+                if (currentColor == colors.red) {
+                    alert('Blue!!!  you won!!');
+                } else {
+                    alert("Red!!! You won!!");
+                }
+                //$("#alert").text('Congratulations!  You won!!');
+                document.location.href = document.location.href;
             } else {
                 //$("#alert").text('No one has won yet!')
             }
-            //if (checkWin(x, y) == true) {
-            //    //$("#alert").text('Congratulations!  You won!!');
-            //    Board_Setup(board, true);
-            //}
+           
         }
     });
 
