@@ -158,6 +158,7 @@
         var blueRow = 0;
         var blueCol = 0;
         
+        //do we have a redrow or a bluerow?
         for (var y2 = 0; y2 < rows; y2++) {
 
             redRow = 0;
@@ -170,6 +171,7 @@
                     if (pieces[y2][x2].img == colors.red) {
 
                         redRow++;
+                        blueRow = 0;
 
                         // $("#alert").text('redRow:' + redRow );
                         if (redRow >= 4) {
@@ -179,44 +181,31 @@
 
                     } else {
                         redRow = 0;
+                        if (pieces[y2][x2].img == colors.blue) {
 
+                            blueRow++;
+
+                            // $("#alert").text('redRow:' + redRow );
+                            if (blueRow >= 4) {
+
+                                return true;
+                            }
+
+                        } else {
+                            blueRow = 0;
+
+                        }
                     }
                 } catch (Exception) {
                     
                 }
             }
-      }
-        for (var y2 = 0; y2 < rows; y2++) {
-            blueRow = 0;
-            
-                
-            
-            //for each col
-            for (var x2 = 0; x2 < cols; x2++) {
-                try {
-                    if (pieces[y2][x2].img == colors.blue) {
-
-                        blueRow++;
-
-                        // $("#alert").text('redRow:' + redRow );
-                        if (blueRow >= 4) {
-
-                            return true;
-                        }
-
-                    } else {
-                        blueRow = 0;
-
-                    }
-                } catch (Exception) {
-                    
-                }
-            }    
-            
         }
+       
+        //do we have a bluecol or a redcol?
         for (var x2 = 0; x2 < cols; x2++) {
             blueCol = 0;
-            
+            redCol = 0;
                 
             
             //for each row
@@ -225,7 +214,7 @@
                     if (pieces[y2][x2].img == colors.blue) {
 
                         blueCol++;
-
+                        redCol = 0;
                         // $("#alert").text('redRow:' + redRow );
                         if (blueCol >=4) {
 
@@ -234,40 +223,28 @@
 
                     } else {
                         blueCol = 0;
+                        if (pieces[y2][x2].img == colors.red) {
 
-                    }
-                } catch (Exception) {
-                    
-                }
-            }    
-        }
-        for (var x2 = 0; x2 < cols; x2++) {
-            redCol = 0;
-            
-                
-            
-            //for each row
-            for (var y2 = 0; y2 < cols; y2++) {
-                try {
-                    if (pieces[y2][x2].img == colors.red) {
+                            redCol++;
 
-                        redCol++;
+                            // $("#alert").text('redRow:' + redRow );
+                            if (redCol >= 4) {
 
-                        // $("#alert").text('redRow:' + redRow );
-                        if (redCol >= 4) {
+                                return true;
+                            }
 
-                            return true;
+                        } else {
+                            redCol = 0;
+
                         }
 
-                    } else {
-                        redCol = 0;
-
                     }
                 } catch (Exception) {
                     
                 }
             }    
         }
+        
         //still need some code in here to detect diagonal wins
 
         return false;
